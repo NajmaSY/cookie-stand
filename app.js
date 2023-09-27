@@ -30,6 +30,9 @@ const hours = [
   "7pm",
 ];
 
+// get table from HTML so we can add rows
+const table = document.getElementById("salesData");
+
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -46,18 +49,8 @@ function Sales(location, minCust, maxCust, avgCookiesPerCust) {
   this.totalCookiesSold = 0;
 }
 
-/*
-for (let i = 0; i < hours.length; i++) {
-  const hourCustomers = randomNumber(this.minCust, this.maxCust);
-  this.customersPerHour.push(hourCustomers);
-  const hourCookiesSold = Math.floor(hourCustomers * this.avgCookiesPerCust);
-  this.cookiesPerHour.push(hourCookiesSold);
-  this.totalCookiesSold = this.totalCookiesSold + hourCookiesSold;
-  console.log(this.totalCookiesSold);
-}
-*/
-
-Sales.prototype.render = function () {
+Sales.prototype.calculateSales = function () {
+  //this.calculateSales()
   for (let i = 0; i < hours.length; i++) {
     const hourCustomers = randomNumber(this.minCust, this.maxCust);
     this.customersPerHour.push(hourCustomers);
@@ -66,34 +59,35 @@ Sales.prototype.render = function () {
     this.cookiesPerHour.push(hourCookiesSold);
 
     this.totalCookiesSold = this.totalCookiesSold + hourCookiesSold;
-    console.log(this.totalCookiesSold);
+    //console.log(this.totalCookiesSold);
   }
+};
 
-  const salesData = document.getElementById("salesData");
-
-  const table = document.createElement("table");
-  salesData.appendChild(table);
-
+Sales.prototype.render = function () {
+  this.calculateSales();
+  //create a row
   const tr = document.createElement("tr");
-  tr.textContent = this.hours;
-  salesData.appendChild(tr);
 
-  const td = document.createElement("td");
-  td.textContent = this.location;
-  tr.appendChild(td);
+  //add store name to the row
+  const th = document.createElement("th"); //table data
+  th.textContent = this.location;
+  tr.appendChild(th); //th - header
 
-  // salesData.appendChild(table);
-
-  for (let i = 0; i < hours.length; i++) {
-    const th = document.createElement("th");
-    th.textContent = this.cookiesPerHour[i];
-    tr.appendChild(th);
+  //salesData.appendChild(tr);
+  //add this stores data to that row  -for loop
+  for (let i = 0; i < this.cookiesPerHour.length; i++) {
+    //create a new td and put the sales number in it
+    const td = document.createElement("td"); //table data
+    td.textContent = this.cookiesPerHour[i];
+    tr.appendChild(td);
   }
-  // add another li to ul that has the totals as text content
-  const th = document.createElement("th");
-  th.textContent = `total ${this.totalCookiesSold}`;
-  tr.appendChild(th);
-  //salesData.appendChild(td);
+
+  // add the total to the end of the row
+  const totalTd = document.createElement("td");
+  totalTd.textContent = this.totalCookieSold;
+  tr.appendChild(totalTd);
+
+  table.appendChild(tr);
 };
 
 const seattle = new Sales("Seattle", 23, 65, 6.3);
@@ -105,6 +99,28 @@ const lima = new Sales("Lima", 2, 16, 4.6);
 // header - function that renders row with the hours in
 // change css - every td, th is same width
 // totals
+//add that row to that table
+
+const headerRow = document.createElement("tr");
+const blankTd = document.createElement("td");
+headerRow.appendChild(blankTd);
+
+//add each time in a th
+for (let i = 0; i < hours.length; i++) {
+  const th = document.createElement("th");
+  th.textContent = hours[i];
+  headerRow.appendChild(th);
+}
+
+// table.appendChild(headerRow)
+
+//total heading
+const totalHeading = document.createElement("th");
+totalHeading.textContent = "Total";
+headerRow.appendChild(totalHeading);
+
+// add the row to the table
+table.appendChild(headerRow);
 
 seattle.render();
 tokyo.render();
