@@ -3,35 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="./app.js"></script>
-
+    <link rel="stylesheet" href="style.css" />
     <title>Salmon Cookies</title>
   </head>
-  <header>
-    <h1>Salmon Cookies</h1>
-    <img src="salmon.png" />
+  <header class="navbar"><!--full width header-->
+      <div class="container"><!--image-->
+    <img src="salmon.png" alt="Logo" class="logo"/>
+      </div>
+    <h1>Pat's Salmon Cookies</h1>
+    <nav>
+      <ul>
+        <li>About</li>
+        <li>Locations</li>
+        <li>Contact</li>
+      </ul>
+    </nav>
+  </div>
   </header>
-  <main>
-    <section>
-      <img src="frosted-cookie.jpg" />
-    </section>
-    <section>
-      <h2>Opening Hours</h2>
-      <p>All stores open from 6am-7pm</p>
-    </section>
-    <section>
-      <img src="cutter.jpeg" />
-    </section>
-    <section>
-      <img src="fish.jpg" />
-    </section>
-  </main>
-
   <body>
-    <h2>Seattle</h2>
-    <h2>Tokyo</h2>
-    <h2>Dubai</h2>
-    <h2>Paris</h2>
-    <h2>Lima</h2>
+    <main>
+      <div id="about">
+        <p>
+          Your friend Pat has come up with a business idea by combining his love
+          for sweets and his passion for healthy ecosystems. Pat has developed a
+          recipe for a coffee-time confection called Salmon Cookies. These
+          cookies made into the shape of a salmon and are suitable for both
+          humans and salmon to enjoy.
+        </p>
+        <img src="cutter.jpeg" />
+        <img src="fish.jpg" />
+        <!--images: salmon, salmon cookie-->
+      </div>
+      <div id="locations">
+        <p>All stores open from 6am-7pm</p>
+        <br />
+        <img src="frosted-cookie.jpg" />
+        <p>Seattle:</p>
+        <br />
+        <p>Tokyo:</p>
+        <br />
+        <p>Dubai:</p>
+        <br />
+        <p>Paris:</p>
+        <br />
+        <p>Lima:</p>
+        <br />
+        <p>Pat’s Salmon Cookies will soon open franchises internationally</p>
+      </div>
+
+      <div id="contact">
+        <h2>Contact Us</h2>
+        <ul>
+          <li></li>
+        </ul>
+      </div>
+    </main>
+    <footer></footer>
+    <script src="./app.js"></script>
   </body>
 </html>
+
+<!--
+- locations with addresses
+- hours open
+- contact information
+- anything else you feel neccessary
+
+link to sales.html page here
+include link to index.html in sales.html
+-->

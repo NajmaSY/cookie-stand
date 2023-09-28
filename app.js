@@ -84,9 +84,8 @@ Sales.prototype.render = function () {
 
   // add the total to the end of the row
   const totalTd = document.createElement("td");
-  totalTd.textContent = this.totalCookieSold;
+  totalTd.textContent = Math.floor(this.totalCookieSold);
   tr.appendChild(totalTd);
-
   table.appendChild(tr);
 };
 
@@ -120,6 +119,7 @@ totalHeading.textContent = "Total";
 headerRow.appendChild(totalHeading);
 
 // add the row to the table
+headerRow.appendChild(totalHeading);
 table.appendChild(headerRow);
 
 seattle.render();
@@ -128,7 +128,18 @@ dubai.render();
 paris.render();
 lima.render();
 
-// replace lists for each store with a single table
-// coloumn: hours 6:00am, 7:00am etc...
-// row: Daily Location Total (cookiesPerHour): Seattle, Tokyo etc...
-//each cookie stand loacation should have a separate render() method that creates and appends its row to the table
+//form
+
+const form = document.getElementById("locationForm");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const location = event.target.location.value;
+  const minCust = event.target.minCust.value;
+  const maxCust = event.target.maxCust.value;
+  const avgCookiesPerCust = event.target.avgCookiesPerCust.value;
+
+  const newLocation = new Sales(location, minCust, maxCust, avgCookiesPerCust);
+  newLocation.render();
+});
