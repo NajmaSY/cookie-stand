@@ -1,18 +1,6 @@
 //  sales data
 // create separate JS object literals for each shop location. Each location will be responsible for generating sales data and providing output on an html document.
 
-// display the lists on sales.html
-
-//each object location should have
-// Location:
-// Min/Cust:
-// Max/Cust:
-// Ave Cookie/Sale:
-
-// Store the min/max hourly customers, and the average cookies per customer, in object properties.
-
-//array of working hours - 14 in a day
-
 const hours = [
   "6am",
   "7am",
@@ -54,16 +42,18 @@ Sales.prototype.calculateSales = function () {
   for (let i = 0; i < hours.length; i++) {
     const hourCustomers = randomNumber(this.minCust, this.maxCust);
     this.customersPerHour.push(hourCustomers);
-    const hourCookiesSold = Math.floor(hourCustomers * this.avgCookiesPerCust);
 
+    //number of cookies sold this hour
+    const hourCookiesSold = Math.floor(hourCustomers * this.avgCookiesPerCust);
     this.cookiesPerHour.push(hourCookiesSold);
 
+    //increase total cookies by adding this hours sales to it
     this.totalCookiesSold = this.totalCookiesSold + hourCookiesSold;
-    //console.log(this.totalCookiesSold);
   }
 };
 
 Sales.prototype.render = function () {
+  //calculate sales data before rendering it
   this.calculateSales();
   //create a row
   const tr = document.createElement("tr");
@@ -73,7 +63,6 @@ Sales.prototype.render = function () {
   th.textContent = this.location;
   tr.appendChild(th); //th - header
 
-  //salesData.appendChild(tr);
   //add this stores data to that row  -for loop
   for (let i = 0; i < this.cookiesPerHour.length; i++) {
     //create a new td and put the sales number in it
@@ -84,22 +73,23 @@ Sales.prototype.render = function () {
 
   // add the total to the end of the row
   const totalTd = document.createElement("td");
-  totalTd.textContent = Math.floor(this.totalCookieSold);
+  totalTd.textContent = this.totalCookieSold;
   tr.appendChild(totalTd);
+
+  //add that row to the table
   table.appendChild(tr);
 };
 
-const seattle = new Sales("Seattle", 23, 65, 6.3);
-const tokyo = new Sales("Tokyo", 3, 24, 1.2);
-const dubai = new Sales("Dubai", 11, 38, 3.7);
-const paris = new Sales("Paris", 20, 38, 2.3);
-const lima = new Sales("Lima", 2, 16, 4.6);
+const stores = [
+  new Sales("Seattle", 23, 65, 6.3),
+  new Sales("Tokyo", 3, 24, 1.2),
+  new Sales("Dubai", 11, 38, 3.7),
+  new Sales("Paris", 20, 38, 2.3),
+  new Sales("Lima", 2, 16, 4.6),
+];
 
-// header - function that renders row with the hours in
-// change css - every td, th is same width
-// totals
-//add that row to that table
-
+// header row - function that renders row with the hours in
+// create tr
 const headerRow = document.createElement("tr");
 const blankTd = document.createElement("td");
 headerRow.appendChild(blankTd);
@@ -111,35 +101,86 @@ for (let i = 0; i < hours.length; i++) {
   headerRow.appendChild(th);
 }
 
-// table.appendChild(headerRow)
-
-//total heading
+//add total heading
 const totalHeading = document.createElement("th");
 totalHeading.textContent = "Total";
 headerRow.appendChild(totalHeading);
 
 // add the row to the table
-headerRow.appendChild(totalHeading);
 table.appendChild(headerRow);
 
-seattle.render();
-tokyo.render();
-dubai.render();
-paris.render();
-lima.render();
+// render each store on the page
+for (let i = 0; i < stores.length; i++) {
+  stores[i].render();
+}
 
-//form
+//get the form DOM mode- to add another location
+const form = document.querySelector("form");
 
-const form = document.getElementById("locationForm");
-
+//add event listener to the form
 form.addEventListener("submit", function (event) {
+  //prevent the page from reloading
   event.preventDefault();
 
+  //get users inputs
   const location = event.target.location.value;
-  const minCust = event.target.minCust.value;
-  const maxCust = event.target.maxCust.value;
-  const avgCookiesPerCust = event.target.avgCookiesPerCust.value;
+  const min = event.target.min.value;
+  const max = event.target.max.value;
+  const avg = event.target.avg.value;
 
-  const newLocation = new Sales(location, minCust, maxCust, avgCookiesPerCust);
-  newLocation.render();
+  //create a new Sales
+  //turn string into numbers so it returns a number - use plus
+  const newStore = new Sales(location, +min, +max, +avg);
+
+  //render the new Sales
+  newStore.render();
+  renderTotalRow();
+
+  //already ran calculateSales func in render
 });
+
+//footerRow
+//form - display info on page when user clicks the button
+
+/*
+THIS IS THE MOST COMPLEX BIT OF JS WE'VE DONE SO FAR
+*/
+
+// create a total row
+function renderTotalRow() {
+  // delete old totalRows
+  const oldTr = document.getElementById("totalrow");
+  oldTr?.remove();
+  // ? = its won't run .remove() if oldTr is null (meaning it isn't on the page)
+
+  // make a new tr
+  const tr = document.createElement("tr");
+  tr.setAttribute("id", "totalrow");
+
+  // add a "total row" heading
+  const th = document.createElement("th");
+  th.textContent = "Hourly Total";
+  tr.appendChild(th);
+
+  // loop round the hours
+  for (let i = 0; i < hours.length; i++) {
+    let hourlyTotal = 0;
+
+    // within each iteration of the hours loop:
+    for (let k = 0; k < stores.length; k++) {
+      // loop the stores array and get only that hours data
+      hourlyTotal = hourlyTotal + stores[k].cookiesPerHour[i];
+      // or -> hourlyTotal += stores[k].cookiesPerHour[i];
+    }
+
+    // add the hourly total td to the row
+    const td = document.createElement("td");
+    td.textContent = hourlyTotal;
+    tr.appendChild(td);
+  }
+
+  // add the tr to the table
+  table.appendChild(tr);
+}
+
+renderTotalRow();
